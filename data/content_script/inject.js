@@ -35,12 +35,15 @@ if (!background) {
             build: function () {
                 config.ruler.element.rect = document.createElement("div");
                 config.ruler.element.container = document.createElement("div");
+                config.ruler.element.alert = document.createElement("div");
                 /*  */
                 config.ruler.element.rect.className = "ruler-mode-rectangle";
                 config.ruler.element.container.className = "ruler-mode-container";
+                config.ruler.element.alert.className = "ruler-mode-alert";
                 /*  */
                 document.body.appendChild(config.ruler.element.container);
                 document.body.appendChild(config.ruler.element.rect);
+                document.body.appendChild(config.ruler.element.alert);
             },
             info: {
                 remove: function () {
@@ -99,21 +102,18 @@ if (!background) {
                     /*  */
                     window.navigator.clipboard.writeText(`${e.pageX}, ${e.pageY}`).then(() => {
                         // 복사가 완료되면 호출된다.
-                        config.ruler.element.alert = document.createElement("div");
-                        config.ruler.element.alert.className = "ruler-mode-alert";
-                        config.ruler.element.alert.textContent = "복사완료";
-                        document.body.appendChild(config.ruler.element.alert);
+                        var alertText = document.createElement("div");
+                        alertText.textContent = "복사완료";
+                        config.ruler.element.alert.appendChild(alertText);
                         setTimeout(function () {
-                            config.ruler.element.alert.remove();
-                        }, 2000);
+                            alertText.remove();
+                        }, 1000);
                     });
                 },
                 move: function (e) {
                     if (e.cancelable) e.preventDefault();
                     /*  */
-                    var action =
-                        e.type === "keydown" ||
-                        (config.ruler.active && (e.type === "touchmove" || e.type === "mousemove"));
+                    var action = e.type === "keydown" || (config.ruler.active && (e.type === "touchmove" || e.type === "mousemove"));
                     if (action) {
                         if (config.ruler.element.rect) {
                             var top = e.pageY;
